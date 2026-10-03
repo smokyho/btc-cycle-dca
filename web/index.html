@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BTC halving-cycle dashboard</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <h1>Bitcoin halving-cycle dashboard</h1>
+  <p class="by">made by smokyho &middot; <a href="https://t.me/smokyho" target="_blank" rel="noopener noreferrer">https://t.me/smokyho</a></p>
+  <div class="sub">
+    <span id="stamp">loading…</span>
+    <span id="countdown">next daily close in —</span>
+    <span class="dot" id="live" aria-hidden="true"></span>
+    <span id="generated"></span>
+    <button type="button" id="refresh-now" class="link">Refresh now</button>
+    <label for="interval">check every
+      <span class="build" id="build" title="asset build hash"></span>
+      <select id="interval">
+        <option value="30" selected>30s</option>
+        <option value="60">60s</option>
+        <option value="300">5m</option>
+      </select>
+    </label>
+  </div>
+</header>
+
+<main>
+  <section>
+    <h2>Price with cycle markers</h2>
+    <div class="scroll-x"><div id="chart"></div></div>
+    <p class="explain"><b>Daily closes, with the strategy marked on it.</b> Blue verticals are halvings, green are the first and last Monday of each buying window, red is the sell, and the dashed line with the dot on the right is the most recent close. The spread between the top band and the bottom band is the forecast range from the section above. Prices before August 2017 come from a multi-exchange index rather than one exchange, so the early history is approximate.</p>
+  </section>
+
+  <section class="cards" id="cards"></section>
+  <p class="explain"><b>Quick read.</b> Price and ATH are the last <i>completed daily close</i> from Binance, not a live tick — the page checks the exchange every 30 seconds but only recomputes after a daily close, because that is the only moment the data changes. Drawdown is how far price sits below its record high. Everything else describes where we are in the current halving cycle: when the strategy buys, and when it would sell. The last halving was 2024-04-20; the next one is expected around 2028-04-10 but has not been mined yet.</p>
+
+  <section>
+    <h2>Current condition — multi-timeframe</h2>
+    <div id="states" class="grid3"></div>
+    <p class="explain"><b>Three views of the same market.</b> Daily and weekly show the short-term picture; monthly is the slow view that decides the trend. <i>RSI</i> above 70 means stretched up, below 30 means stretched down. <i>vs MA200</i> is how far price sits above or below its 200-period average. The interesting signal is disagreement between timeframes: when daily and weekly say "uptrend" while monthly still says "range", the short-term move is usually a rally inside a longer decline rather than a new trend — which is where the market is right now.</p>
+  </section>
+
+  <section id="prediction" aria-labelledby="pred-h">
+    <h2 id="pred-h">Prediction <small>recomputed from live data on every refresh</small></h2>
+    <div class="notice" id="pred-error" role="alert" hidden>
+      <span id="pred-error-msg">Update failed.</span>
+      <button type="button" id="pred-retry">Retry</button>
+    </div>
+    <div class="panel" aria-busy="true" id="pred-panel">
+      <h3>Where price sits against the forecast range</h3>
+      <div class="scroll-x"><div id="axis" class="skeleton"></div></div>
+      <table class="sr-only" id="axis-table"></table>
+    </div>
+    <div class="grid2" id="pred-tiles"></div>
+    <div class="grid3" id="pred-evidence"></div>
+    <p class="explain"><b>What this is, and what it is not.</b> The two ranges combine independent methods: volatility bands (how far price could plausibly travel over a year if it moved randomly) and the cycle-amplitude model (how large each past halving rally turned out to be). Both are scenarios, not predictions. Only three halving cycles have ever completed, the volatility bands deliberately assume zero drift, and no method here can tell you <i>when</i> anything happens. Use the ranges as a planning band, not a target.</p>
+  </section>
+
+  <section>
+    <h2>Halvings &amp; historical cycles</h2>
+    <div class="scroll-x"><table id="halvings"></table></div>
+    <div class="scroll-x"><table id="cycles"></table></div>
+    <p class="explain"><b>A record, not a pattern.</b> Each row is the window between one halving and the next. <i>d A→high</i> and <i>d A→low</i> count days from the start of that window. With only four halvings in Bitcoin's history there is not enough data to call any of this a reliable rule — it is a description of what happened four times.</p>
+  </section>
+
+  <section>
+    <h2>Strategy backtest <small>52 Monday buys, day +718 to +1082; sell day +450 of next cycle</small></h2>
+    <div class="scroll-x"><table id="strategy"></table></div>
+    <p class="explain"><b>What the strategy would have done.</b> Buy 1/52 of the portfolio every Monday for a year, starting about two years after each halving, then sell everything roughly 450 days into the next cycle. Cycle 4 has not finished, so it has no exit price yet. Three things make these numbers flattering: fees, slippage and taxes are all set to zero; prices before 2017 use index data; and the exit rule was chosen in advance rather than tested against alternatives.</p>
+  </section>
+</main>
+
+<footer>
+  Sources: Binance public REST (daily/weekly/monthly BTCUSDT), blockchain.info index (pre-2017), blockstream.info (halving blocks).
+  Zero fees, slippage and taxes. Educational analysis, not investment advice.
+</footer>
+<script src="/app.js"></script>
+</body>
+</html>

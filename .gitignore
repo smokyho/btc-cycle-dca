@@ -1,0 +1,39 @@
+# macOS / editor cruft
+.DS_Store
+.DS_Store?
+._*
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Local secrets / config -- never commit these. This project needs none of them
+# (every data source is a public, keyless endpoint), but keep the guard in place.
+.env
+.env.*
+*.pem
+*.key
+
+# Build output. There is no committed data: a clone regenerates data/ and charts/
+# from the public APIs, so nothing under here is tracked.
+data/
+charts/
+
+# Runtime artefacts
+*.log

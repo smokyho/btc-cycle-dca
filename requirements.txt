@@ -1,0 +1,5 @@
+# Only numpy and matplotlib are needed. Everything else is Python 3.11+ stdlib:
+# the server, the HTTP client, the fetchers and the CSV I/O all use the standard
+# library on purpose, so there is no web framework in this dependency tree.
+numpy>=1.24
+matplotlib>=3.7
